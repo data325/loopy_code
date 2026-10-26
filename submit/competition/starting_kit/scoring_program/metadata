@@ -1,0 +1,2 @@
+command: bash run.sh
+description: UrbanTwin sim2real LiDAR scoring (CD, EMD, MMD-CD, 3D mAP)

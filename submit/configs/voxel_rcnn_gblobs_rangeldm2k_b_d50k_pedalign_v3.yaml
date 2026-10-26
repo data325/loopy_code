@@ -1,0 +1,44 @@
+_BASE_CONFIG_: 'configs/voxel_rcnn_centerhead_gblobs_urbantwin.yaml'
+
+# VoxelRCNN (two-stage, GBlobs fork) retrained on the current best synthetic
+# recipe: RangeLDM B-batch + 50k pts/frame (d50k) + B4-style pedestrian
+# alignment/sparse augmentation. Goal: architecture diversity for ensembles.
+DATA_CONFIG:
+    DATA_PATH: 'data/openpcdet_g0s_seq250_rangeldm2k_b_d50k'
+    DATA_SPLIT: {'train': train, 'test': val}
+    INFO_PATH:
+        train: [custom_infos_train_compat.pkl]
+        test: [custom_infos_val_compat.pkl]
+    DATA_AUGMENTOR:
+        DISABLE_AUG_LIST: []
+        AUG_CONFIG_LIST:
+            - NAME: gt_sampling
+              USE_ROAD_PLANE: False
+              DB_INFO_PATH: [data/openpcdet_g0s_seq250/shared_ped_dbinfos_compat.pkl]
+              PREPARE: {filter_by_min_points: ['pedestrian:3']}
+              SAMPLE_GROUPS: ['pedestrian:20']
+              NUM_POINT_FEATURES: 4
+              DATABASE_WITH_FAKELIDAR: False
+              REMOVE_EXTRA_WIDTH: [0.0, 0.0, 0.0]
+              LIMIT_WHOLE_SCENE: True
+            - NAME: v2x_sensor_vfield
+              PROBABILITY: 0.85
+              MAX_DEFORM: 0.08
+              RANGE_NOISE_STD: 0.025
+              DROP_RATE: [0.0, 0.12]
+            - NAME: v2x_ped_align
+              PROBABILITY: 0.95
+              REAL_DIMS: [0.68, 0.69, 1.74]
+              DIM_STD: [0.05, 0.05, 0.07]
+              KEEP_ORIGINAL_PROB: 0.0
+              SPARSE_PROB: 0.6
+            - NAME: random_world_flip
+              ALONG_AXIS_LIST: ['x', 'y']
+            - NAME: random_world_rotation
+              WORLD_ROT_ANGLE: [-0.392699, 0.392699]
+            - NAME: random_world_scaling
+              WORLD_SCALE_RANGE: [0.95, 1.05]
+
+OPTIMIZATION:
+    BATCH_SIZE_PER_GPU: 4
+    NUM_EPOCHS: 40

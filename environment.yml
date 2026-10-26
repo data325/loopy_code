@@ -1,0 +1,31 @@
+name: urbantwin-v2xreal
+channels:
+  - nvidia
+  - pytorch
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pytorch=2.1.2
+  - torchvision=0.16.2
+  - pytorch-cuda=11.8
+  - cuda-nvcc=11.8
+  - cuda-cudart-dev=11.8
+  - numpy=1.26
+  - pip
+  - pip:
+      - spconv-cu118
+      - tensorboardX
+      - easydict
+      - numba
+      - scikit-image
+      - tqdm
+      - SharedArray
+      - pyquaternion
+      - opencv-python-headless
+      - scipy
+      - POT
+      - jsonschema
+      - pypdf
+      - pdfplumber
+      - reportlab
+
